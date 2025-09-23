@@ -40,7 +40,7 @@ export const createKelompokService = async (data) => {
 
 export const editKelompokService = async (id, data) => {
   const kelompok = await prisma.kelompok.update({
-    where: { id },
+    where: { id: parseInt(id) },
     data,
     select: {
       id: true,
@@ -53,7 +53,7 @@ export const editKelompokService = async (id, data) => {
 export const deleteKelompokService = async (id) => {
   await prisma.kelompok.delete({
     where: {
-      id,
+      id: parseInt(id),
     },
   });
 };
