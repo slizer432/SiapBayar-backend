@@ -13,7 +13,88 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model group {
-  id    Int     @id @default(autoincrement())
-  name  String  @unique
+// Model untuk Anggota/Pengguna
+model Anggota {
+  id        Int      @id @default(autoincrement())
+  namaLengkap String   @map("nama_lengkap")
+  email     String   @unique
+  dibuatPada DateTime @default(now()) @map("dibuat_pada")
+
+  // Relasi
+  // Keanggotaan dalam berbagai kelompok
+  kelompok           AnggotaKelompok[]
+  // Daftar pengeluaran yang pernah dia bayar
+  pengeluaranDibayar Pengeluaran[]     @relation("Pembayar")
+  // Daftar jatah urunan yang menjadi tanggungannya
+  jatahDitanggung    JatahUrunan[]     @relation("Penanggung")
+
+  @@map("anggota")
+}
+
+// Model untuk Kelompok Urunan
+model Kelompok {
+  id           Int      @id @default(autoincrement())
+  namaKelompok String   @map("nama_kelompok")
+  deskripsi    String?
+  dibuatPada   DateTime @default(now()) @map("dibuat_pada")
+
+  // Relasi
+  // Daftar anggota dalam kelompok ini
+  anggota      AnggotaKelompok[]
+  // Daftar pengeluaran dalam kelompok ini
+  pengeluaran  Pengeluaran[]
+
+  @@map("kelompok")
+}
+
+// Model untuk tabel penghubung Anggota dan Kelompok (Many-to-Many)
+model AnggotaKelompok {
+  kelompokId     Int      @map("id_kelompok")
+  anggotaId      Int      @map("id_anggota")
+  bergabungPada  DateTime @default(now()) @map("bergabung_pada")
+
+  // Relasi
+  kelompok       Kelompok @relation(fields: [kelompokId], references: [id], onDelete: Cascade)
+  anggota        Anggota  @relation(fields: [anggotaId], references: [id], onDelete: Cascade)
+
+  // Composite primary key
+  @@id([kelompokId, anggotaId])
+  @@map("anggota_kelompok")
+}
+
+// Model untuk Pengeluaran
+model Pengeluaran {
+  id                 Int       @id @default(autoincrement())
+  deskripsi          String
+  jumlahTotal        Decimal   @map("jumlah_total")
+  tanggalPengeluaran DateTime  @db.Date @map("tanggal_pengeluaran")
+  dibuatPada         DateTime  @default(now()) @map("dibuat_pada")
+  
+  // Foreign Keys & Relasi
+  kelompokId         Int       @map("id_kelompok")
+  kelompok           Kelompok  @relation(fields: [kelompokId], references: [id], onDelete: Cascade)
+
+  pembayarId         Int       @map("id_anggota_pembayar")
+  pembayar           Anggota   @relation("Pembayar", fields: [pembayarId], references: [id], onDelete: Cascade)
+
+  // Relasi ke jatah urunan
+  jatahUrunan        JatahUrunan[]
+
+  @@map("pengeluaran")
+}
+
+// Model untuk Jatah Urunan per Anggota
+model JatahUrunan {
+  id             Int     @id @default(autoincrement())
+  jumlahJatah    Decimal @map("jumlah_jatah")
+  sudahLunas     Boolean @default(false) @map("sudah_lunas")
+
+  // Foreign Keys & Relasi
+  pengeluaranId  Int     @map("id_pengeluaran")
+  pengeluaran    Pengeluaran @relation(fields: [pengeluaranId], references: [id], onDelete: Cascade)
+
+  penanggungId   Int     @map("id_anggota_penanggung")
+  penanggung     Anggota @relation("Penanggung", fields: [penanggungId], references: [id], onDelete: Cascade)
+
+  @@map("jatah_urunan")
 }
