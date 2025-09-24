@@ -17,14 +17,13 @@ datasource db {
 model Anggota {
   id        Int      @id @default(autoincrement())
   namaLengkap String   @map("nama_lengkap")
-  email     String   @unique
   dibuatPada DateTime @default(now()) @map("dibuat_pada")
 
   // Relasi
   // Keanggotaan dalam berbagai kelompok
   kelompok           AnggotaKelompok[]
-  // Daftar pengeluaran yang pernah dia bayar
-  pengeluaranDibayar Pengeluaran[]     @relation("Pembayar")
+  // Daftar pembayaran pengeluaran yang pernah dia lakukan
+  pembayaranPengeluaran PembayaranPengeluaran[]
   // Daftar jatah urunan yang menjadi tanggungannya
   jatahDitanggung    JatahUrunan[]     @relation("Penanggung")
 
@@ -74,13 +73,26 @@ model Pengeluaran {
   kelompokId         Int       @map("id_kelompok")
   kelompok           Kelompok  @relation(fields: [kelompokId], references: [id], onDelete: Cascade)
 
-  pembayarId         Int       @map("id_anggota_pembayar")
-  pembayar           Anggota   @relation("Pembayar", fields: [pembayarId], references: [id], onDelete: Cascade)
+  // Relasi ke pembayar (many-to-many)
+  pembayaran         PembayaranPengeluaran[]
 
   // Relasi ke jatah urunan
   jatahUrunan        JatahUrunan[]
 
   @@map("pengeluaran")
+}
+
+// Model untuk relasi many-to-many antara Pengeluaran dan Anggota sebagai pembayar
+model PembayaranPengeluaran {
+  pengeluaranId Int     @map("id_pengeluaran")
+  anggotaId     Int     @map("id_anggota_pembayar")
+  jumlahBayar   Decimal @map("jumlah_bayar")
+
+  pengeluaran   Pengeluaran @relation(fields: [pengeluaranId], references: [id], onDelete: Cascade)
+  anggota       Anggota     @relation(fields: [anggotaId], references: [id], onDelete: Cascade)
+
+  @@id([pengeluaranId, anggotaId])
+  @@map("pembayaran_pengeluaran")
 }
 
 // Model untuk Jatah Urunan per Anggota
