@@ -79,6 +79,7 @@ model Pengeluaran {
   // Relasi ke jatah urunan
   jatahUrunan        JatahUrunan[]
 
+
   @@map("pengeluaran")
 }
 

@@ -4,13 +4,34 @@ const prisma = new PrismaClient();
 
 export const getAllKelompokService = async () => {
   const semuaKelompok = await prisma.kelompok.findMany({
-    include: {
+    select: {
+      id: true,
+      namaKelompok: true,
+      deskripsi: true,
       anggota: {
-        include: {
-          anggota: true,
+        select: {
+          anggota: { select: { namaLengkap: true } },
         },
       },
-      pengeluaran: true,
+      pengeluaran: {
+        select: {
+          id: true,
+          deskripsi: true,
+          jumlahTotal: true,
+          pembayaran: {
+            select: {
+              jumlahBayar: true,
+              anggota: { select: { namaLengkap: true } },
+            },
+          },
+          jatahUrunan: {
+            select: {
+              jumlahJatah: true,
+              penanggung: { select: { namaLengkap: true } },
+            },
+          },
+        },
+      },
     },
   });
   return semuaKelompok;
