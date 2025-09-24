@@ -86,3 +86,16 @@ export const deleteKelompok = async (req, res) => {
     });
   }
 };
+
+export const getKelompokById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const kelompok = await kelompokService.getKelompokByIdService(id);
+    res.status(200).json(kelompok);
+  } catch (error) {
+    res.status(500).json({
+      message: "Gagal mendapatkan data kelompok",
+      error: error.message,
+    });
+  }
+};

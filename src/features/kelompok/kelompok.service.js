@@ -1,8 +1,18 @@
 import { PrismaClient } from "@prisma/client";
+import { parse } from "dotenv";
 const prisma = new PrismaClient();
 
 export const getAllKelompokService = async () => {
-  const semuaKelompok = await prisma.kelompok.findMany();
+  const semuaKelompok = await prisma.kelompok.findMany({
+    include: {
+      anggota: {
+        include: {
+          anggota: true,
+        },
+      },
+      pengeluaran: true,
+    },
+  });
   return semuaKelompok;
 };
 
@@ -56,4 +66,19 @@ export const deleteKelompokService = async (id) => {
       id: parseInt(id),
     },
   });
+};
+
+export const getKelompokByIdService = async (id) => {
+  const kelompok = await prisma.kelompok.findUnique({
+    where: { id: parseInt(id) },
+    include: {
+      anggota: {
+        include: {
+          anggota: true,
+        },
+      },
+      pengeluaran: true,
+    },
+  });
+  return kelompok;
 };
