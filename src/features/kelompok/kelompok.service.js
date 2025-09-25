@@ -1,3 +1,25 @@
+export const createAnggotaDanGabungKelompok = async (
+  namaLengkap,
+  kelompokId
+) => {
+  // Buat anggota baru
+  const anggota = await prisma.anggota.create({
+    data: {
+      namaLengkap,
+      kelompok: {
+        create: [{ kelompokId }],
+      },
+    },
+    select: {
+      id: true,
+      namaLengkap: true,
+      kelompok: {
+        select: { kelompokId: true },
+      },
+    },
+  });
+  return anggota;
+};
 import { PrismaClient } from "@prisma/client";
 import { parse } from "dotenv";
 const prisma = new PrismaClient();

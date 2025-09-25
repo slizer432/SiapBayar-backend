@@ -1,3 +1,25 @@
+export const createAnggotaKelompok = async (req, res) => {
+  const kelompokId = parseInt(req.params.id);
+  const { namaLengkap } = req.body;
+  if (!namaLengkap) {
+    return res.status(400).json({ message: "Nama anggota harus diisi" });
+  }
+  try {
+    // Buat anggota baru
+    const anggotaBaru = await kelompokService.createAnggotaDanGabungKelompok(
+      namaLengkap,
+      kelompokId
+    );
+    res.status(201).json(anggotaBaru);
+  } catch (error) {
+    res
+      .status(500)
+      .json({
+        message: "Gagal membuat anggota dan menambah ke kelompok",
+        error: error.message,
+      });
+  }
+};
 // kelompok.controller.js
 
 import * as kelompokService from "./kelompok.service.js"; // Ganti import

@@ -12,4 +12,5 @@ router.put("/:id", kelompokController.editKelompok); // Langsung gunakan fungsin
 router.delete("/:id", kelompokController.deleteKelompok); // Langsung gunakan fungsinya
 router.get("/:id", kelompokController.getKelompokById);
 
+router.post("/:id/anggota", kelompokController.createAnggotaKelompok);
 export default router; // Ganti export
