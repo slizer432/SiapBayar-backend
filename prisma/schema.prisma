@@ -35,6 +35,7 @@ model Kelompok {
   id           Int      @id @default(autoincrement())
   namaKelompok String   @map("nama_kelompok")
   deskripsi    String?
+  tanggalPengeluaran DateTime? @db.Date @map("tanggal_pengeluaran")
   dibuatPada   DateTime @default(now()) @map("dibuat_pada")
 
   // Relasi
