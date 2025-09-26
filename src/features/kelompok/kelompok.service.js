@@ -30,9 +30,10 @@ export const getAllKelompokService = async () => {
       id: true,
       namaKelompok: true,
       deskripsi: true,
+      dibuatPada: true,
       anggota: {
         select: {
-          anggota: { select: { namaLengkap: true } },
+          anggota: { select: { namaLengkap: true, dibuatPada: true } },
         },
       },
       pengeluaran: {
@@ -40,16 +41,17 @@ export const getAllKelompokService = async () => {
           id: true,
           deskripsi: true,
           jumlahTotal: true,
+          dibuatPada: true,
           pembayaran: {
             select: {
               jumlahBayar: true,
-              anggota: { select: { namaLengkap: true } },
+              anggota: { select: { namaLengkap: true, dibuatPada: true } },
             },
           },
           jatahUrunan: {
             select: {
               jumlahJatah: true,
-              penanggung: { select: { namaLengkap: true } },
+              penanggung: { select: { namaLengkap: true, dibuatPada: true } },
             },
           },
         },
