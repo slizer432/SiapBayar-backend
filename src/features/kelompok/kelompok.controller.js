@@ -25,17 +25,10 @@ import * as kelompokService from "./kelompok.service.js"; // Ganti import
 export const getAllKelompok = async (req, res) => {
   try {
     const semuaKelompok = await kelompokService.getAllKelompokService();
-    res.status(200).json({
-      success: true,
-      message: "Berhasil mendapatkan data kelompok",
-      data: semuaKelompok,
-    });
+    res.status(200).json(semuaKelompok);
   } catch (error) {
     res.status(500).json({
-      success: false,
-      message: "Gagal mendapatkan data kelompok",
-      error: error.message,
-      data: null,
+      error: error.message
     });
   }
 };
