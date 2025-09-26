@@ -29,15 +29,24 @@ router.get("/", async (req, res) => {
     const pembayaranPengeluaran = await prisma.pembayaranPengeluaran.findMany({
       include: { anggota: true, pengeluaran: true },
     });
-    res.json({
-      anggota,
-      kelompok,
-      pengeluaran,
-      jatahUrunan,
-      pembayaranPengeluaran,
+    res.status(200).json({
+      success: true,
+      message: "Berhasil mendapatkan semua data",
+      data: {
+        anggota,
+        kelompok,
+        pengeluaran,
+        jatahUrunan,
+        pembayaranPengeluaran,
+      },
     });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({
+      success: false,
+      message: "Gagal mendapatkan semua data",
+      error: err.message,
+      data: null,
+    });
   }
 });
 

@@ -1,14 +1,45 @@
 import * as anggotaService from "./anggota.service.js";
 
 export async function getAllAnggota(req, res) {
-  const data = await anggotaService.getAll();
-  res.json(data);
+  try {
+    const data = await anggotaService.getAll();
+    res.status(200).json({
+      success: true,
+      message: "Berhasil mendapatkan data anggota",
+      data,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Gagal mendapatkan data anggota",
+      error: error.message,
+      data: null,
+    });
+  }
 }
 
 export async function getAnggotaById(req, res) {
-  const data = await anggotaService.getById(Number(req.params.id));
-  if (!data) return res.status(404).json({ error: "Not found" });
-  res.json(data);
+  try {
+    const data = await anggotaService.getById(Number(req.params.id));
+    if (!data)
+      return res.status(404).json({
+        success: false,
+        message: "Anggota tidak ditemukan",
+        data: null,
+      });
+    res.status(200).json({
+      success: true,
+      message: "Berhasil mendapatkan data anggota",
+      data,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Gagal mendapatkan data anggota",
+      error: error.message,
+      data: null,
+    });
+  }
 }
 
 export async function createAnggota(req, res) {

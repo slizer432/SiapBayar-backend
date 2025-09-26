@@ -12,12 +12,10 @@ export const createAnggotaKelompok = async (req, res) => {
     );
     res.status(201).json(anggotaBaru);
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        message: "Gagal membuat anggota dan menambah ke kelompok",
-        error: error.message,
-      });
+    res.status(500).json({
+      message: "Gagal membuat anggota dan menambah ke kelompok",
+      error: error.message,
+    });
   }
 };
 // kelompok.controller.js
@@ -27,11 +25,17 @@ import * as kelompokService from "./kelompok.service.js"; // Ganti import
 export const getAllKelompok = async (req, res) => {
   try {
     const semuaKelompok = await kelompokService.getAllKelompokService();
-    res.status(200).json(semuaKelompok);
+    res.status(200).json({
+      success: true,
+      message: "Berhasil mendapatkan data kelompok",
+      data: semuaKelompok,
+    });
   } catch (error) {
     res.status(500).json({
+      success: false,
       message: "Gagal mendapatkan data kelompok",
       error: error.message,
+      data: null,
     });
   }
 };
@@ -40,11 +44,17 @@ export const getKelompokSearch = async (req, res) => {
   const { search } = req.query;
   try {
     const kelompok = await kelompokService.getKelompokSearch(search);
-    res.status(200).json(kelompok);
+    res.status(200).json({
+      success: true,
+      message: "Berhasil mendapatkan data kelompok",
+      data: kelompok,
+    });
   } catch (error) {
     res.status(500).json({
+      success: false,
       message: "Gagal mendapatkan data kelompok",
       error: error.message,
+      data: null,
     });
   }
 };
@@ -113,11 +123,17 @@ export const getKelompokById = async (req, res) => {
   const { id } = req.params;
   try {
     const kelompok = await kelompokService.getKelompokByIdService(id);
-    res.status(200).json(kelompok);
+    res.status(200).json({
+      success: true,
+      message: "Berhasil mendapatkan data kelompok",
+      data: kelompok,
+    });
   } catch (error) {
     res.status(500).json({
+      success: false,
       message: "Gagal mendapatkan data kelompok",
       error: error.message,
+      data: null,
     });
   }
 };

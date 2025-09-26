@@ -33,7 +33,12 @@ export const getAllKelompokService = async () => {
       dibuatPada: true,
       anggota: {
         select: {
-          anggota: { select: { namaLengkap: true, dibuatPada: true } },
+          kelompokId: true,
+          anggotaId: true,
+          bergabungPada: true,
+          anggota: {
+            select: { id: true, namaLengkap: true, dibuatPada: true },
+          },
         },
       },
       pengeluaran: {
