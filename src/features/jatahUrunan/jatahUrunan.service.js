@@ -2,12 +2,9 @@ import prisma from "../../lib/prisma.js";
 
 export async function getAll() {
   return prisma.jatahUrunan.findMany({
-    select: {
-      id: true,
-      jumlahJatah: true,
-      sudahLunas: true,
-      penanggung: { select: { namaLengkap: true } },
-      pengeluaran: { select: { deskripsi: true, jumlahTotal: true } },
+    include: {
+      penanggung: true,
+      pengeluaran: true,
     },
   });
 }
@@ -15,12 +12,9 @@ export async function getAll() {
 export async function getById(id) {
   return prisma.jatahUrunan.findUnique({
     where: { id },
-    select: {
-      id: true,
-      jumlahJatah: true,
-      sudahLunas: true,
-      penanggung: { select: { namaLengkap: true } },
-      pengeluaran: { select: { deskripsi: true, jumlahTotal: true } },
+    include: {
+      penanggung: true,
+      pengeluaran: true,
     },
   });
 }

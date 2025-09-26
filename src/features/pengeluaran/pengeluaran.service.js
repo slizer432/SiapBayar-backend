@@ -2,22 +2,16 @@ import prisma from "../../lib/prisma.js";
 
 export async function getAll() {
   return prisma.pengeluaran.findMany({
-    select: {
-      id: true,
-      deskripsi: true,
-      jumlahTotal: true,
-      tanggalPengeluaran: true,
-      kelompok: { select: { namaKelompok: true } },
+    include: {
+      kelompok: true,
       pembayaran: {
-        select: {
-          jumlahBayar: true,
-          anggota: { select: { namaLengkap: true } },
+        include: {
+          anggota: true,
         },
       },
       jatahUrunan: {
-        select: {
-          jumlahJatah: true,
-          penanggung: { select: { namaLengkap: true } },
+        include: {
+          penanggung: true,
         },
       },
     },
@@ -27,22 +21,16 @@ export async function getAll() {
 export async function getById(id) {
   return prisma.pengeluaran.findUnique({
     where: { id },
-    select: {
-      id: true,
-      deskripsi: true,
-      jumlahTotal: true,
-      tanggalPengeluaran: true,
-      kelompok: { select: { namaKelompok: true } },
+    include: {
+      kelompok: true,
       pembayaran: {
-        select: {
-          jumlahBayar: true,
-          anggota: { select: { namaLengkap: true } },
+        include: {
+          anggota: true,
         },
       },
       jatahUrunan: {
-        select: {
-          jumlahJatah: true,
-          penanggung: { select: { namaLengkap: true } },
+        include: {
+          penanggung: true,
         },
       },
     },

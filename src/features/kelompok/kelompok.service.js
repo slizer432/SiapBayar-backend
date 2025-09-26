@@ -26,37 +26,22 @@ const prisma = new PrismaClient();
 
 export const getAllKelompokService = async () => {
   const semuaKelompok = await prisma.kelompok.findMany({
-    select: {
-      id: true,
-      namaKelompok: true,
-      deskripsi: true,
-      dibuatPada: true,
+    include: {
       anggota: {
-        select: {
-          kelompokId: true,
-          anggotaId: true,
-          bergabungPada: true,
-          anggota: {
-            select: { id: true, namaLengkap: true, dibuatPada: true },
-          },
+        include: {
+          anggota: true,
         },
       },
       pengeluaran: {
-        select: {
-          id: true,
-          deskripsi: true,
-          jumlahTotal: true,
-          dibuatPada: true,
+        include: {
           pembayaran: {
-            select: {
-              jumlahBayar: true,
-              anggota: { select: { namaLengkap: true, dibuatPada: true } },
+            include: {
+              anggota: true,
             },
           },
           jatahUrunan: {
-            select: {
-              jumlahJatah: true,
-              penanggung: { select: { namaLengkap: true, dibuatPada: true } },
+            include: {
+              penanggung: true,
             },
           },
         },
@@ -76,11 +61,26 @@ export const getKelompokSearch = async (search) => {
           },
         }
       : undefined,
-    select: {
-      id: true,
-      namaKelompok: true,
-      deskripsi: true,
-      dibuatPada: true,
+    include: {
+      anggota: {
+        include: {
+          anggota: true,
+        },
+      },
+      pengeluaran: {
+        include: {
+          pembayaran: {
+            include: {
+              anggota: true,
+            },
+          },
+          jatahUrunan: {
+            include: {
+              penanggung: true,
+            },
+          },
+        },
+      },
     },
   });
   return kelompok;
@@ -89,11 +89,6 @@ export const getKelompokSearch = async (search) => {
 export const createKelompokService = async (data) => {
   const kelompok = await prisma.kelompok.create({
     data,
-    select: {
-      id: true,
-      namaKelompok: true,
-      deskripsi: true,
-    },
   });
   return kelompok;
 };
@@ -102,12 +97,8 @@ export const editKelompokService = async (id, data) => {
   const kelompok = await prisma.kelompok.update({
     where: { id: parseInt(id) },
     data,
-    select: {
-      id: true,
-      namaKelompok: true,
-      deskripsi: true,
-    },
   });
+  return kelompok;
 };
 
 export const deleteKelompokService = async (id) => {
